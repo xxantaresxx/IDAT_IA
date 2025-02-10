@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+
+# Node.js
+node_modules/
+package-lock.json
+server.js
+
+# OS
+.DS_Store
