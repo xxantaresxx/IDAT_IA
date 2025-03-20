@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Análisis de Documentos Legales</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-center mb-8">Sistema de Análisis de la Nueva Ley de Contrataciones con el Estado</h1>
+        
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="mb-4">
+                    <label for="question" class="block text-gray-700 text-sm font-bold mb-2">
+                        Ingrese su pregunta:
+                    </label>
+                    <textarea
+                        id="question"
+                        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        rows="3"
+                        placeholder="Ejemplo: ¿Cómo se determina el valor referencial de una contratación pública?"
+                    ></textarea>
+                </div>
+                
+                <div class="flex justify-center">
+                    <button
+                        id="submitBtn"
+                        onclick="sendQuery()"
+                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    >
+                        Consultar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div id="error" class="mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" role="alert">
+                <strong class="font-bold">Error: </strong>
+                <span id="errorMessage" class="block sm:inline"></span>
+            </div>
+
+            <!-- Indicador de carga -->
+            <div id="loading" class="mt-6 text-center hidden">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                <p class="mt-2 text-gray-600">Procesando su consulta...</p>
+            </div>
+
+            <div id="response" class="mt-6 bg-white rounded-lg shadow-md p-6 hidden">
+                <h2 class="text-xl font-semibold mb-4">Respuesta:</h2>
+                <div id="answer" class="text-gray-700 mb-4 whitespace-pre-line"></div>
+                
+                <div class="mt-4">
+                    <h3 class="font-semibold text-gray-600">Fuentes:</h3>
+                    <ul id="sources" class="list-disc list-inside text-gray-600"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const submitBtn = document.getElementById('submitBtn');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const responseDiv = document.getElementById('response');
+        const errorMessage = document.getElementById('errorMessage');
+
+        function showLoading(show) {
+            loadingDiv.classList.toggle('hidden', !show);
+            submitBtn.disabled = show;
+            submitBtn.classList.toggle('opacity-50', show);
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorDiv.classList.remove('hidden');
+            responseDiv.classList.add('hidden');
+        }
+
+        function hideError() {
+            errorDiv.classList.add('hidden');
+        }
+
+        async function sendQuery() {
+            const question = document.getElementById('question').value;
+            if (!question.trim()) {
+                showError('Por favor ingrese una pregunta');
+                return;
+            }
+
+            hideError();
+            showLoading(true);
+
+            try {
+                const response = await fetch('http://127.0.0.1:8000/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.detail || 'Error al procesar la consulta');
+                }
+                
+                // Mostrar la respuesta
+                responseDiv.classList.remove('hidden');
+                document.getElementById('answer').innerHTML = data.answer || 'No se obtuvo respuesta';
+                
+                // Mostrar fuentes
+                const sourcesList = document.getElementById('sources');
+                sourcesList.innerHTML = '';
+                if (data.sources && data.sources.length > 0) {
+                    data.sources.forEach(source => {
+                        const li = document.createElement('li');
+                        li.textContent = source;
+                        sourcesList.appendChild(li);
+                    });
+                } else {
+                    sourcesList.innerHTML = '<li>No se encontraron fuentes</li>';
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Permitir enviar con Enter
+        document.getElementById('question').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendQuery();
+            }
+        });
+    </script>
+</body>
+</html> 

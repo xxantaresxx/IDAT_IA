@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.env
+.venv
+ENV/
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# Directories to exclude
+cache/
+data/
+
+# Logs
+*.log
+*.sqlite
+
+# Local development
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración de IDE
+.idea/
+*.pyc
+
+# Ignorar archivos de entorno
+.env
+
+# Ignorar archivos de caché
+cache/
+
+# Ignorar archivos de logs
+*.log

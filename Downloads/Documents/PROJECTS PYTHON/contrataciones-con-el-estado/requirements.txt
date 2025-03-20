@@ -1,0 +1,47 @@
+# Backend
+fastapi==0.110.0
+uvicorn==0.29.0
+python-multipart>=0.0.5
+pydantic==2.6.4
+gunicorn>=21.2.0
+
+# Document Processing
+PyPDF2==3.0.1
+langchain>=0.1.0
+langchain-text-splitters>=0.0.1
+langchain-openai>=0.0.8
+langchain-core>=0.1.0
+langchain-qdrant>=0.0.1
+langsmith>=0.0.1
+sentence-transformers==2.5.1
+tiktoken==0.6.0
+
+# Vector Store
+scikit-learn>=1.0.0
+numpy>=1.26.0
+scipy>=1.8.0
+qdrant-client>=1.13.3
+
+# Graph Processing
+langgraph>=0.0.10
+langgraph-sdk>=0.1.0
+graphviz>=0.20.1
+
+# OpenAI API
+openai>=1.14.0
+azure-identity>=1.15.0  # Para autenticación con Azure
+azure-mgmt-cognitiveservices>=13.5.0  # Para gestión de servicios cognitivos
+
+# Testing
+pytest>=7.0.0
+httpx>=0.28.1
+
+# Utils
+python-dotenv==1.0.1
+tqdm>=4.66.2
+pandas>=2.0.0
+ipython>=8.0.0
+
+# Para manejo de texto y procesamiento
+nltk>=3.8.0
+spacy>=3.0.0 
